@@ -16,10 +16,12 @@ class AnswerViewController: UIViewController {
     var curr: Int = 0
     var correct: Bool = false
     var answer: String = ""
+    var question: String = ""
     var score: Int = 0
     var questions = [(text: String, answer: Int, answers: [String])]()
     @IBOutlet weak var image: UIImageView!
     @IBOutlet weak var answerLabel: UILabel!
+    @IBOutlet weak var questionLabel: UILabel!
     
     fileprivate func questionBuilder() {
         if questionVC == nil {
@@ -47,6 +49,7 @@ class AnswerViewController: UIViewController {
             image.image = UIImage(named: "wrong")
         }
         answerLabel.text = answer
+        questionLabel.text = question
     }
     
     @IBAction func back(_ sender: Any) {

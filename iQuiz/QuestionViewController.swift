@@ -16,6 +16,7 @@ class QuestionViewController: UIViewController {
     var count: Int = 0
     var questions = [(text: String, answer: Int, answers: [String])]()
     var score: Int = 0
+    var answerChose = -1
 
     // outlets
     @IBOutlet weak var questionText: UILabel!
@@ -63,24 +64,34 @@ class QuestionViewController: UIViewController {
         present((storyboard?.instantiateViewController(withIdentifier: "quizTable"))!, animated: false, completion: nil)
     }
 
-    
-    @IBAction fileprivate func questionToAnswer(_ sender: UIButton) {
-        answerBuilder()
-        answerVC.correct = btns[questions[curr].answer - 1] == sender
-        answerVC.answer = questions[curr].answers[questions[curr].answer - 1]
-        answerVC.questions = self.questions
-        answerVC.curr = self.curr
-        if (btns[questions[curr].answer - 1] == sender) {
-            answerVC.score = self.score + 1
-        } else {
-            answerVC.score = self.score
+    @IBAction func chooseAnswer(_ sender: UIButton) {
+        for button in btns {
+            button.backgroundColor = UIColor.white
         }
-        let transition = CATransition()
-        transition.duration = 0.3
-        transition.type = kCATransitionPush
-        transition.subtype = kCATransitionFromRight
-        view.window!.layer.add(transition, forKey: kCATransition)
-        present(answerVC, animated: false, completion: nil)
+        sender.backgroundColor = UIColor.lightGray
+        answerChose = btns.startIndex.distance(to: btns.index(of: sender)!)
+    }
+    
+    @IBAction fileprivate func questionToAnswer(_ sender: Any) {
+        if (answerChose != -1) {
+            answerBuilder()
+            answerVC.correct = answerChose + 1 == questions[curr].answer
+            answerVC.answer = questions[curr].answers[questions[curr].answer - 1]
+            answerVC.questions = self.questions
+            answerVC.curr = self.curr
+            answerVC.question = questions[curr].text
+            if (answerChose + 1 == questions[curr].answer) {
+                answerVC.score = self.score + 1
+            } else {
+                answerVC.score = self.score
+            }
+            let transition = CATransition()
+            transition.duration = 0.3
+            transition.type = kCATransitionPush
+            transition.subtype = kCATransitionFromRight
+            view.window!.layer.add(transition, forKey: kCATransition)
+            present(answerVC, animated: false, completion: nil)
+        }
     }
     
     /*
